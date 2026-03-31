@@ -129,14 +129,54 @@ def easterEgg():
         """
 
 
+def displayWord(targetWord, correctLetters):
+    displayedWord = ""
+    for idx in range(len(targetWord)):
+        if targetWord[idx] in correctLetters:
+            displayedWord += targetWord[idx]
+        else:
+            displayedWord += "_"
+        displayedWord += " "
+    return displayedWord
+
+
 # ~~~~~ MAIN DEFINITION ~~~~~
 def main():
     wordBank = loadBank()
 
+    wrongGuesses = 0
+    guessedLetters = {"a": False, "b": False, "c": False, "d": False, "e": False,
+                      "f": False, "g": False, "h": False, "i": False, "j": False,
+                      "k": False, "l": False, "m": False, "n": False, "o": False,
+                      "p": False, "q": False, "r": False, "s": False, "t": False,
+                      "u": False, "v": False, "w": False, "x": False, "y": False, "z": False}
+
     choiceIdx = randint(0, (len(wordBank) - 1))
     chosenWord = wordBank[choiceIdx]
 
-    print(chosenWord)
+    chosenWord2 = "mountain"
+    correctGuesses = []
+
+    while wrongGuesses < 6:
+        print(f"Wrong guesses: {wrongGuesses}")
+        print(f"Correct guesses: {correctGuesses}")
+        print(displayWord(chosenWord2, correctGuesses))
+        print("\nGuess a letter (or 'quit' to exit)")
+        guessedLetter = input(" --> ").lower()
+        if guessedLetter == "quit":
+            wrongGuesses = 7
+        elif guessedLetters[guessedLetter] == True:
+            pass
+        else:
+            guessedLetters[guessedLetter] = True
+            if guessedLetter not in chosenWord2:
+                wrongGuesses += 1
+            else:
+                correctGuesses.append(guessedLetter)
+                print(correctGuesses)
+
+
+    # print(chosenWord)
 
     # # For testing hangman print outputs
     # for wrongGuessNum in range(8):
