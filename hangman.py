@@ -142,46 +142,76 @@ def displayWord(targetWord, correctLetters):
 
 # ~~~~~ MAIN DEFINITION ~~~~~
 def main():
+    appOn = True
     wordBank = loadBank()
 
-    wrongGuesses = 0
-    guessedLetters = {"a": False, "b": False, "c": False, "d": False, "e": False,
-                      "f": False, "g": False, "h": False, "i": False, "j": False,
-                      "k": False, "l": False, "m": False, "n": False, "o": False,
-                      "p": False, "q": False, "r": False, "s": False, "t": False,
-                      "u": False, "v": False, "w": False, "x": False, "y": False, "z": False}
-
-    choiceIdx = randint(0, (len(wordBank) - 1))
-    chosenWord = wordBank[choiceIdx]
-
-    chosenWord2 = "mountain"
-    correctGuesses = []
-
-    while wrongGuesses < 6:
-        print(f"Wrong guesses: {wrongGuesses}")
-        print(f"Correct guesses: {correctGuesses}")
-        print(displayWord(chosenWord2, correctGuesses))
-        print("\nGuess a letter (or 'quit' to exit)")
-        guessedLetter = input(" --> ").lower()
-        if guessedLetter == "quit":
-            wrongGuesses = 7
-        elif guessedLetters[guessedLetter] == True:
-            pass
+    while appOn:
+        print("Would you like to play a game of hangman? (y/n)")
+        playGame = input(" --> ").lower()
+        if playGame not in ['y', 'yes', 'sure']:
+            appOn = False
         else:
-            guessedLetters[guessedLetter] = True
-            if guessedLetter not in chosenWord2:
-                wrongGuesses += 1
-            else:
-                correctGuesses.append(guessedLetter)
-                print(correctGuesses)
+            playerWins = 0
+            compWins = 0
+            gameSeries = True
+            print("How long of a series would you like to play?")
+            gamesToPlay = int(input(" --> "))
+            while gameSeries:
+                guessedLetters = {"a": False, "b": False, "c": False, "d": False, "e": False,
+                                "f": False, "g": False, "h": False, "i": False, "j": False,
+                                "k": False, "l": False, "m": False, "n": False, "o": False,
+                                "p": False, "q": False, "r": False, "s": False, "t": False,
+                                "u": False, "v": False, "w": False, "x": False, "y": False, "z": False}
+
+                choiceIdx = randint(0, (len(wordBank) - 1))
+                chosenWord = wordBank[choiceIdx]
+                wrongGuesses = 0
+                correctGuesses = []
+
+                while wrongGuesses < 6:
+                    printMan(wrongGuesses)
+                    print(displayWord(chosenWord, correctGuesses))
+                    print("\nGuess a letter (or 'quit' to exit)")
+                    guessedLetter = input(" --> ").lower()
+                    if guessedLetter == "quit":
+                        wrongGuesses = 7
+                    elif guessedLetters[guessedLetter] == True:
+                        print("Letter already guessed - try again!")
+                    else:
+                        guessedLetters[guessedLetter] = True
+                        if guessedLetter not in chosenWord:
+                            wrongGuesses += 1
+                        else:
+                            correctGuesses.append(guessedLetter)
+                    for idx in range(len(chosenWord)):
+                        if chosenWord[idx] not in correctGuesses:
+                            break
+                        if idx == len(chosenWord) - 1:
+                            wrongGuesses = 9
+
+                if wrongGuesses == 9:
+                    print("Congrats! You've won!")
+                    playWins += 1
+                else:
+                    print("You lost! Try again!")
+                    compWins += 1
 
 
-    # print(chosenWord)
+                if playerWins > (gamesToPlay // 2):
+                    print("Congrats player, you've won!")
+                    gameSeries = False
+                elif compWins > (gamesToPlay // 2):
+                    print("You suck!")
+                    gameSeries = False
+                elif (playerWins + compWins) == gamesToPlay:
+                    if playerWins > compWins:
+                        print("Congrats player, you've won!")
+                    else:
+                        print("You suck!")
+                    gameSeries = False
+                else:
+                    continue
 
-    # # For testing hangman print outputs
-    # for wrongGuessNum in range(8):
-    #     print("")
-    #     printMan(wrongGuessNum)
 
 
 # ~~~~~ MAIN CALL ~~~~~
